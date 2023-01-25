@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">ListDetailApp</string>
+    <string name="magicItems">Magic Items</string>
+    <string name="magicItem">Magic Item</string>
+    <string name="listScreenErrorMessage">Failed to load Magic Items</string>
+    <string name="detailsScreenErrorMessage">Failed to load selected Magic Item</string>
+</resources>

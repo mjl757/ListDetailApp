@@ -3,7 +3,7 @@ An app that pulls in data from a free api to display of items that are clickable
 
 The API I decided to use was a freely available [Open5e](https://www.open5e.com/) RESTful API found [here](https://api.open5e.com/).
 
-Using this API I pull a list of Magic Items down to display to the user. When the user selects an item from the list they are taken to a view to see the details of that item, with the description formatted using Markdown.
+Using this API I pull a list of Magic Items from Fifth Edition Dungeons and Dragons down to display to the user. When the user selects an item from the list they are taken to a view to see the details of that item, with the description formatted using Markdown.
 
 Given more time on the project I would like to make some of the following improvements to the app:
 - Add far more tests to get the test coverage up a respectable level.

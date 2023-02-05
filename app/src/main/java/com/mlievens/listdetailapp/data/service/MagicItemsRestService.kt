@@ -6,25 +6,22 @@ import com.mlievens.listdetailapp.data.models.MagicItem
 import com.mlievens.listdetailapp.domain.models.ItemDetail
 import com.mlievens.listdetailapp.domain.models.ListItemData
 
-class MagicItemsRestService(private val apiService: ApiService): MagicItemsService {
+class MagicItemsRestService(private val apiService: ApiService) : MagicItemsService {
 
     private var magicItemCache: List<MagicItem>? = null
 
     override suspend fun getMagicItems(): Result<List<ListItemData>> {
         loadMagicItems()
-        return magicItemCache?.let { magicItems ->
-            Result.success(magicItems.map {
-                it.toListItemData()
-            })
-        } ?: Result.failure(Throwable(message = "Unable to load Magic Items"))
+        return magicItemCache?.map {
+            it.toListItemData()
+        }?.success() ?: Result.failure(Throwable(message = "Unable to load Magic Items"))
     }
 
     override suspend fun getMagicItem(itemId: String): Result<ItemDetail> {
         loadMagicItems()
         return magicItemCache?.let { magicItems ->
-            magicItems.firstOrNull { it.slug == itemId }?.let {
-                Result.success(it.toItemDetail())
-            } ?: Result.failure(Throwable(message = "Unable to find selected Magic Item"))
+            magicItems.firstOrNull { it.slug == itemId }?.toItemDetail()?.success()
+                ?: Result.failure(Throwable(message = "Unable to find selected Magic Item"))
         } ?: Result.failure(Throwable(message = "Unable to load Magic Item"))
     }
 
@@ -37,3 +34,5 @@ class MagicItemsRestService(private val apiService: ApiService): MagicItemsServi
         }
     }
 }
+
+private fun <T> T.success() = Result.success(this)

@@ -13,12 +13,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.mlievens.listdetailapp.domain.models.ListItemData
 import com.mlievens.listdetailapp.R
 import com.mlievens.listdetailapp.ui.composables.LoadingIndicator
 
+object ListScreenTestTags {
+    const val ERROR_CONTENT = "error"
+    const val LOADING_CONTENT = "loading"
+}
 @Composable
 fun ListScreen(viewModel: ListViewModel, onItemSelected: (String, String) -> Unit) {
     val state by viewModel.itemState.collectAsState()
@@ -29,14 +35,16 @@ fun ListScreen(viewModel: ListViewModel, onItemSelected: (String, String) -> Uni
 }
 
 @Composable
-fun ListScreen(viewState: ListViewState, onItemSelected: (String, String) -> Unit) {
+fun ListScreen(viewState: ListScreenViewState, onItemSelected: (String, String) -> Unit) {
     when (viewState) {
-        is ListViewState.LoadingState -> LoadingIndicator()
-        is ListViewState.SuccessState -> ListScreenContent(
+        is ListScreenViewState.LoadingState -> LoadingIndicator(Modifier.semantics {
+            testTag = ListScreenTestTags.LOADING_CONTENT
+        })
+        is ListScreenViewState.SuccessState -> ListScreenContent(
             itemList = viewState.itemList,
             onItemSelected = onItemSelected,
         )
-        ListViewState.ErrorState -> TODO()
+        is ListScreenViewState.ErrorState -> ListScreenError()
     }
 }
 
@@ -79,7 +87,10 @@ fun ListItem(itemData: ListItemData, onItemSelected: (String, String) -> Unit) {
 
 @Composable
 fun ListScreenError() {
-    Box(modifier = Modifier.fillMaxSize()) {
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .semantics { testTag = ListScreenTestTags.ERROR_CONTENT }
+    ) {
         Text(
             modifier = Modifier.align(Alignment.Center),
             text = stringResource(id = R.string.listScreenErrorMessage),

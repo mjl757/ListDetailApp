@@ -23,12 +23,8 @@ class DetailsViewModel @Inject constructor(
         viewModelScope.launch {
             itemId?.let { id ->
                 itemDetailRepository.getItemDetail(id)
-                    .onSuccess {
-                        _detailState.emit(DetailViewState.SuccessState(it))
-                    }
-                    .onFailure {
-                        _detailState.emit(DetailViewState.ErrorState)
-                    }
+                    .onSuccess { _detailState.emit(DetailViewState.SuccessState(it)) }
+                    .onFailure { _detailState.emit(DetailViewState.ErrorState) }
             } ?: _detailState.emit(DetailViewState.ErrorState)
         }
     }
@@ -37,6 +33,6 @@ class DetailsViewModel @Inject constructor(
 
 sealed class DetailViewState {
     object LoadingState : DetailViewState()
-    class SuccessState(val detail: ItemDetail) : DetailViewState()
+    data class SuccessState(val detail: ItemDetail) : DetailViewState()
     object ErrorState : DetailViewState()
 }

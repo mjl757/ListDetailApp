@@ -43,7 +43,7 @@ fun DetailsScreen(viewState: DetailViewState) {
             testTag = DetailsScreenTestTags.LOADING_CONTENT
         })
         is DetailViewState.SuccessState -> DetailsScreenContent(detail = viewState.detail)
-        DetailViewState.ErrorState -> DetailsScreenError()
+        is DetailViewState.ErrorState -> DetailsScreenError()
     }
 }
 

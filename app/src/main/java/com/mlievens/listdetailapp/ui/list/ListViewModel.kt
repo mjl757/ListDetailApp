@@ -12,14 +12,19 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ListViewModel @Inject constructor(
-    itemListRepository: ItemListRepository,
+    private val itemListRepository: ItemListRepository,
 ): ViewModel() {
     private val _itemState : MutableStateFlow<ListScreenViewState> = MutableStateFlow(ListScreenViewState.LoadingState)
 
     val itemState: StateFlow<ListScreenViewState> get() = _itemState
 
     init {
+        loadItems()
+    }
+
+    fun loadItems() {
         viewModelScope.launch {
+            _itemState.emit(ListScreenViewState.LoadingState)
             itemListRepository.getItemList()
                 .onSuccess { _itemState.emit(ListScreenViewState.SuccessState(it)) }
                 .onFailure { _itemState.emit(ListScreenViewState.ErrorState) }

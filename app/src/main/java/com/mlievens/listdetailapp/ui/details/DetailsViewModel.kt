@@ -29,6 +29,10 @@ class DetailsViewModel @Inject constructor(
         }
     }
 
+    fun reloadDetails() {
+
+    }
+
 }
 
 sealed class DetailViewState {

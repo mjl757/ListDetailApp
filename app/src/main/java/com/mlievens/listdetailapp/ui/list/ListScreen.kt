@@ -11,14 +11,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.mlievens.listdetailapp.domain.models.ListItemData
 import com.mlievens.listdetailapp.R
+import com.mlievens.listdetailapp.ui.composables.ErrorScreen
 import com.mlievens.listdetailapp.ui.composables.LoadingIndicator
 
 object ListScreenTestTags {
@@ -31,11 +30,16 @@ fun ListScreen(viewModel: ListViewModel, onItemSelected: (String, String) -> Uni
     ListScreen(
         viewState = state,
         onItemSelected = onItemSelected,
+        viewModel::loadItems,
     )
 }
 
 @Composable
-fun ListScreen(viewState: ListScreenViewState, onItemSelected: (String, String) -> Unit) {
+fun ListScreen(
+    viewState: ListScreenViewState,
+    onItemSelected: (String, String) -> Unit,
+    reloadItems: () -> Unit
+) {
     when (viewState) {
         is ListScreenViewState.LoadingState -> LoadingIndicator(Modifier.semantics {
             testTag = ListScreenTestTags.LOADING_CONTENT
@@ -44,7 +48,11 @@ fun ListScreen(viewState: ListScreenViewState, onItemSelected: (String, String) 
             itemList = viewState.itemList,
             onItemSelected = onItemSelected,
         )
-        is ListScreenViewState.ErrorState -> ListScreenError()
+        is ListScreenViewState.ErrorState -> ErrorScreen(
+            modifier = Modifier.semantics { testTag = ListScreenTestTags.ERROR_CONTENT },
+            errorMessage = stringResource(id = R.string.listScreenErrorMessage),
+            onRetryClicked = reloadItems
+        )
     }
 }
 
@@ -72,7 +80,7 @@ fun ListItem(itemData: ListItemData, onItemSelected: (String, String) -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .height(48.dp)
-            .clickable { onItemSelected(itemData.id, itemData.name) }
+            .clickable { onItemSelected(itemData.id, itemData.name) },
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Text(
@@ -83,21 +91,4 @@ fun ListItem(itemData: ListItemData, onItemSelected: (String, String) -> Unit) {
             )
         }
     }
-}
-
-@Composable
-fun ListScreenError() {
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .semantics { testTag = ListScreenTestTags.ERROR_CONTENT }
-    ) {
-        Text(
-            modifier = Modifier.align(Alignment.Center),
-            text = stringResource(id = R.string.listScreenErrorMessage),
-            color = Color.Red,
-            fontSize = 15.sp
-        )
-
-    }
-
 }

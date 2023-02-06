@@ -1,7 +1,6 @@
 package com.mlievens.listdetailapp
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -28,8 +27,8 @@ fun ListDetailNavHost(
             val viewModel = hiltViewModel<ListViewModel>()
             ListScreen(
                 viewModel = viewModel,
-                onItemSelected = { itemId, itemName ->
-                    navController.navigateToDetail(itemId, itemName)
+                onItemSelected = { itemId ->
+                    navController.navigateToDetail(itemId)
                 }
             )
         }
@@ -38,8 +37,7 @@ fun ListDetailNavHost(
             arguments = ListDetailDestinations.Details.arguments
         ) {
             val viewModel = hiltViewModel<DetailsViewModel>()
-            val itemId = it.arguments?.getString(ListDetailDestinations.Details.itemIdArg)
-            DetailsScreen(viewModel, itemId)
+            DetailsScreen(viewModel)
         }
 
     }
@@ -47,8 +45,8 @@ fun ListDetailNavHost(
 }
 
 
-fun NavHostController.navigateToDetail(itemId: String, itemName: String) {
-    this.navigate("${ListDetailDestinations.Details.route}/$itemId/$itemName")
+fun NavHostController.navigateToDetail(itemId: String) {
+    this.navigate("${ListDetailDestinations.Details.route}/$itemId")
 }
 
 sealed class ListDetailDestinations(val route: String) {
@@ -56,11 +54,9 @@ sealed class ListDetailDestinations(val route: String) {
     object Details: ListDetailDestinations("detail") {
 
         const val itemIdArg = "itemId"
-        const val itemNameArg = "itemName"
-        val routeWithArgs = "$route/{$itemIdArg}/{$itemNameArg}"
+        val routeWithArgs = "$route/{$itemIdArg}"
         val arguments = listOf(
             navArgument(itemIdArg) { type = NavType.StringType },
-            navArgument(itemNameArg) { type = NavType.StringType }
         )
     }
 }

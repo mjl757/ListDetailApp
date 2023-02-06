@@ -25,7 +25,7 @@ object ListScreenTestTags {
     const val LOADING_CONTENT = "loading"
 }
 @Composable
-fun ListScreen(viewModel: ListViewModel, onItemSelected: (String, String) -> Unit) {
+fun ListScreen(viewModel: ListViewModel, onItemSelected: (String) -> Unit) {
     val state by viewModel.itemState.collectAsState()
     ListScreen(
         viewState = state,
@@ -37,7 +37,7 @@ fun ListScreen(viewModel: ListViewModel, onItemSelected: (String, String) -> Uni
 @Composable
 fun ListScreen(
     viewState: ListScreenViewState,
-    onItemSelected: (String, String) -> Unit,
+    onItemSelected: (String) -> Unit,
     reloadItems: () -> Unit
 ) {
     when (viewState) {
@@ -57,7 +57,7 @@ fun ListScreen(
 }
 
 @Composable
-fun ListScreenContent(itemList: List<ListItemData>, onItemSelected: (String, String) -> Unit) {
+fun ListScreenContent(itemList: List<ListItemData>, onItemSelected: (String) -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -75,12 +75,12 @@ fun ListScreenContent(itemList: List<ListItemData>, onItemSelected: (String, Str
 }
 
 @Composable
-fun ListItem(itemData: ListItemData, onItemSelected: (String, String) -> Unit) {
+fun ListItem(itemData: ListItemData, onItemSelected: (String) -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .height(48.dp)
-            .clickable { onItemSelected(itemData.id, itemData.name) },
+            .clickable { onItemSelected(itemData.id) },
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Text(

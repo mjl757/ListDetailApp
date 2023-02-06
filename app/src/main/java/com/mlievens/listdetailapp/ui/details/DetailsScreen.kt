@@ -28,11 +28,10 @@ object DetailsScreenTestTags {
 }
 
 @Composable
-fun DetailsScreen(viewModel: DetailsViewModel, itemId: String?) {
-    viewModel.loadDetails(itemId)
+fun DetailsScreen(viewModel: DetailsViewModel) {
 
     val state by viewModel.detailState.collectAsState()
-    DetailsScreen(viewState = state, reloadDetails = viewModel::reloadDetails)
+    DetailsScreen(viewState = state, reloadDetails = viewModel::loadDetails)
 }
 
 @Composable

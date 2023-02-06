@@ -1,5 +1,6 @@
 package com.mlievens.listdetailapp.ui.details
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.mlievens.listdetailapp.domain.models.ItemDetail
@@ -13,13 +14,21 @@ import javax.inject.Inject
 @HiltViewModel
 class DetailsViewModel @Inject constructor(
     private val itemDetailRepository: ItemDetailRepository,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
+    private val itemId: String? = savedStateHandle["itemId"]
+
     private val _detailState: MutableStateFlow<DetailViewState> =
         MutableStateFlow(DetailViewState.LoadingState)
 
     val detailState: StateFlow<DetailViewState> get() = _detailState
 
-    fun loadDetails(itemId: String?) {
+    init {
+        loadDetails()
+    }
+
+    fun loadDetails() {
         viewModelScope.launch {
             itemId?.let { id ->
                 itemDetailRepository.getItemDetail(id)
@@ -27,10 +36,6 @@ class DetailsViewModel @Inject constructor(
                     .onFailure { _detailState.emit(DetailViewState.ErrorState) }
             } ?: _detailState.emit(DetailViewState.ErrorState)
         }
-    }
-
-    fun reloadDetails() {
-
     }
 
 }

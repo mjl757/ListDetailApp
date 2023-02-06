@@ -1,5 +1,6 @@
 package com.mlievens.listdetailapp.data.service
 
+import android.util.Log
 import com.mlievens.listdetailapp.data.mappers.toItemDetail
 import com.mlievens.listdetailapp.data.mappers.toListItemData
 import com.mlievens.listdetailapp.data.models.MagicItem
@@ -27,9 +28,13 @@ class MagicItemsRestService(private val apiService: ApiService) : MagicItemsServ
 
     private suspend fun loadMagicItems() {
         if (magicItemCache == null) {
-            val response = apiService.getItems()
-            if (response.isSuccessful && response.body() != null) {
-                magicItemCache = response.body()!!.results.sortedBy { it.name }
+            try {
+                val response = apiService.getItems()
+                if (response.isSuccessful && response.body() != null) {
+                    magicItemCache = response.body()!!.results.sortedBy { it.name }
+                }
+            } catch (e: Throwable) {
+                Log.e("MagicItemsRestService", "Failed to retrieve items from server", e)
             }
         }
     }

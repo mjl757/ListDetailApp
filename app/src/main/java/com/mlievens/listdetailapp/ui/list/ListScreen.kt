@@ -61,8 +61,8 @@ fun ListScreenContent(itemList: List<ListItemData>, onItemSelected: (String, Str
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(12.dp)
-            .verticalScroll(rememberScrollState()),
+            .verticalScroll(rememberScrollState())
+            .padding(12.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         itemList.forEach {

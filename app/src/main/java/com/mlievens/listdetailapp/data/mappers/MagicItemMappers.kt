@@ -14,5 +14,5 @@ fun MagicItem.toItemDetail(): ItemDetail = ItemDetail(
     description = desc,
     type = type,
     rarity = rarity,
-    requiresAttunement = requires_attunement
+    requiresAttunement = requiresAttunement
 )

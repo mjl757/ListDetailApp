@@ -22,7 +22,8 @@ class ListScreenTest {
             ListDetailAppTheme {
                 ListScreen(
                     viewState = ListScreenViewState.LoadingState,
-                    onItemSelected = { _, _ -> }
+                    onItemSelected = {},
+                    reloadItems = {}
                 )
             }
         }
@@ -36,7 +37,8 @@ class ListScreenTest {
             ListDetailAppTheme {
                 ListScreen(
                     viewState = ListScreenViewState.ErrorState,
-                    onItemSelected = { _, _ -> }
+                    onItemSelected = {},
+                    reloadItems = {}
                 )
             }
         }
@@ -61,7 +63,8 @@ class ListScreenTest {
             ListDetailAppTheme {
                 ListScreen(
                     viewState = ListScreenViewState.SuccessState(list),
-                    onItemSelected = { _, _ -> }
+                    onItemSelected = {},
+                    reloadItems = {}
                 )
             }
         }

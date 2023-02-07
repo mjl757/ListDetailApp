@@ -1,12 +1,13 @@
 package com.mlievens.listdetailapp.ui.details
 
+import androidx.lifecycle.SavedStateHandle
+import com.mlievens.listdetailapp.domain.models.ItemDetail
 import com.mlievens.listdetailapp.domain.repositories.ItemDetailRepository
 import io.mockk.*
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.newSingleThreadContext
-import kotlinx.coroutines.test.advanceUntilIdle
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -23,10 +24,12 @@ class DetailsViewModelTest {
     private val mainThreadSurrogate = newSingleThreadContext("UI thread")
 
     private val itemDetailRepository: ItemDetailRepository = mockk(relaxed = true)
+    private val savedStateHandle = SavedStateHandle()
 
     @Before
     fun setUp() {
         Dispatchers.setMain(mainThreadSurrogate)
+        savedStateHandle.set("itemId", "testId")
     }
 
     @After
@@ -37,15 +40,24 @@ class DetailsViewModelTest {
 
     @Test
     fun `initial detail state is loading`() {
-        val testObject = DetailsViewModel(itemDetailRepository)
+        val testObject = DetailsViewModel(itemDetailRepository, savedStateHandle)
         assert(testObject.detailState.value == DetailViewState.LoadingState)
     }
 
     @Test
     fun `loadDetails calls getItemDetail`() = runTest {
-        val testObject = DetailsViewModel(itemDetailRepository)
-        testObject.loadDetails("test")
-        coVerify(exactly = 1) { itemDetailRepository.getItemDetail("test") }
+        val itemDetail = ItemDetail(
+            name = "item1",
+            type = "type`",
+            description = "description",
+            rarity = "Very Rare",
+            requiresAttunement = "Yes"
+        )
+        coEvery { itemDetailRepository.getItemDetail("testId") } returns Result.success(itemDetail)
+
+        DetailsViewModel(itemDetailRepository, savedStateHandle)
+
+        coVerify(exactly = 1) { itemDetailRepository.getItemDetail("testId") }
     }
 
 }

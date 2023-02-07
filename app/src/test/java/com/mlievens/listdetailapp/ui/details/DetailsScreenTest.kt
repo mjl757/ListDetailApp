@@ -20,7 +20,7 @@ class DetailsScreenTest {
     fun `loading state shows Loading Indicator`() {
         composeTestRule.setContent {
             ListDetailAppTheme {
-                DetailsScreen(viewState = DetailViewState.LoadingState)
+                DetailsScreen(viewState = DetailViewState.LoadingState, reloadDetails = {})
             }
         }
 
@@ -31,7 +31,7 @@ class DetailsScreenTest {
     fun `error state shows error content`() {
         composeTestRule.setContent {
             ListDetailAppTheme {
-                DetailsScreen(viewState = DetailViewState.ErrorState)
+                DetailsScreen(viewState = DetailViewState.ErrorState, reloadDetails = {})
             }
         }
         composeTestRule.onNodeWithTag(DetailsScreenTestTags.LOADING_CONTENT).assertDoesNotExist()
@@ -51,7 +51,7 @@ class DetailsScreenTest {
         )
         composeTestRule.setContent {
             ListDetailAppTheme {
-                DetailsScreen(viewState = DetailViewState.SuccessState(details))
+                DetailsScreen(viewState = DetailViewState.SuccessState(details), reloadDetails = {})
             }
         }
 
